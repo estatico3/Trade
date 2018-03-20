@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Trade</string>
     <string name="launch">Авторизоваться</string>
+    <string name="payway_but">Просмотр</string>
+    <string name="distway_but">Просмотр</string>
+    <string name="distwayTitle">Пункт выдачи :</string>
 </resources>

@@ -13,7 +13,11 @@ import retrofit2.Retrofit;
 import retrofit2.http.GET;
 import okhttp3.OkHttpClient;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -23,6 +27,12 @@ import java.util.concurrent.TimeUnit;
  * Created by admin on 19.03.18.
  */
 public class Parser {
+
+    private String uri;
+
+    public Parser(String uri) {
+        this.uri = uri;
+    }
 
     private Map<Integer,Order> orders;
 
@@ -39,51 +49,41 @@ public class Parser {
     CSMONEYService apiService = retrofit.create(CSMONEYService.class);
 
     public interface ResultCallback {
-        void skins(Object response);
+        void skins(org.json.simple.JSONObject response);
     }
 
     private interface CSMONEYService {
         @GET("/orders/cart")
-        Call<Object> getItem();
+        Call<org.json.simple.JSONObject> getItem();
 
     }
 
-    private void initializeApi(){
-    }
 
-    public void requestSkins(final ResultCallback resultCallback) throws IOException {
-        Log.wtf("tag", "Inside Skins");
-
-        Call<Object> getSkins = apiService.getItem();
-        Log.wtf("tag", "Inside Skins");
-        Log.wtf("tag", "Inside Skins");
-        getSkins.enqueue(new Callback<Object>() {
-            @Override
-            public void onResponse(Call<Object> call, retrofit2.Response<Object> response) {
-                try {
-                    Log.wtf("tag", "Inside Skins 1 = " + response.code());
-                    Log.wtf("tag", "Inside Skins 1 = " + response.errorBody());
-
-                    if(response.isSuccessful()){
-                        if (resultCallback != null) {
-                            resultCallback.skins(response.body());
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
+    public String requestSkins() throws IOException {
 
 
-            @Override
-            public void onFailure(Call<Object> call, Throwable t) {
-                Log.wtf("tag", "Error 1 = " + t);
-            }
-        });
+        URL obj = new URL(this.uri);
+        HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
+
+        connection.setRequestMethod("GET");
+
+        BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        String inputLine;
+        StringBuffer response = new StringBuffer();
+
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+
+        System.out.println(response.toString());
+        return response.toString();
+
+
     }
 
     @SuppressLint("NewApi")
-    private Map<Integer,Order> parser(String response) throws JSONException {
+    public Map<Integer,Order> parser(String response) throws JSONException {
         JSONObject all = null;
         JSONObject data = null;
         org.json.JSONArray orders = null;

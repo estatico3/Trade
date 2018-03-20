@@ -1,11 +1,12 @@
 package com.example.estat.trade.Models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by admin on 19.03.18.
  */
-public class Order {
+public class Order implements Serializable{
 
     private Payway[] payways;
     private Item[] items;

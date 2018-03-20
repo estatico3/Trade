@@ -19,7 +19,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.launcher:
-                Intent intent = new Intent(this,OrderCategoryActivity.class);
+                Intent intent = new Intent(this,OrderListActivity.class);
                 startActivity(intent);
                 break;
         }
